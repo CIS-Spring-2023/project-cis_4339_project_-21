@@ -136,6 +136,7 @@ export default {
           <!-- form field -->
           <!-- This section needs to be changed-->
           <!-- Testing GITHUB functionalities -->
+          <!-- Test 1: checking another push to services branch after clsoing pull request -->
           <div class="flex flex-col grid-cols-3">
             <label>Services Offered at Event</label>
             <div>
