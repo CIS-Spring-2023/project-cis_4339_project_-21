@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col">
         <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">
-            Welcome, please Login!
+            Welcome, Please Login!
         </h1>
         <br>
         <br>
@@ -32,13 +32,27 @@
                         </button>
                     </div>
 
-                    
                 </form>
             </div>
     </div>
 </template>
 
 <script>
+    export default {
+        name: 'login',
+        data(){
+            return {
+                username: '',
+                password: ''
+            }
+        },
+        methods: {
+            login: function(){
+                console.log("User:" + this.username);
+                console.log("Pass:" + this.password);
+            }
+        }
+    }
 </script>
 
 <style scoped>
