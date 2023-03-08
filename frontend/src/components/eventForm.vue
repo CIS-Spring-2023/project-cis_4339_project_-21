@@ -1,4 +1,5 @@
 <script>
+import listServices from './services.vue'
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from 'axios'
@@ -13,7 +14,7 @@ export default {
       // removed unnecessary extra array to track services
       event: {
         name: '',
-        services: [],
+        services: listServices.data().services,
         date: '',
         address: {
           line1: '',
@@ -42,6 +43,9 @@ export default {
             console.log(error)
           })
       }
+    },
+    editServices() {
+      this.$router.push('/services')
     }
   },
   // sets validations for the various data properties
@@ -134,8 +138,33 @@ export default {
           <div></div>
           <div></div>
           <!-- form field -->
+          <!-- This section needs to be changed for services -->
+          <!-- <div>
+          <ul>
+                <li v-for="(service, index) in event.services" :key="index" class="service-item">
+                    <div class="service-name" >
+                        {{ service.name }} 
+                    </div>
+                    <br>
+                </li>
+          </ul>
+          </div> -->
           <div class="flex flex-col grid-cols-3">
             <label>Services Offered at Event</label>
+            <!-- new section -->
+            <div v-for="(service, index) in event.services" :key="index">
+              <label v-if="event.services[index].active" for="{{ service.name }}" class="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  id="{{ service.name }}"
+                  value="{{ service.name }}"
+                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
+                  notchecked
+                />
+                <span class="ml-2">{{ service.name }} </span>
+              </label>
+            </div>
+            <!-- new section -->
             <div>
               <label for="familySupport" class="inline-flex items-center">
                 <input
@@ -187,6 +216,10 @@ export default {
                 />
                 <span class="ml-2">Early Childhood Education</span>
               </label>
+            </div>
+            <!-- Add a button to edit services if user is an editor -->
+            <div>
+              <v-btn class="bg-red-700 text-white rounded" @click="editServices">Edit Services</v-btn>
             </div>
           </div>
         </div>
