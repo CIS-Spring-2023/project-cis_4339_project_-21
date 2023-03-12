@@ -18,7 +18,7 @@
         "rgb(255, 99, 132)",
         "rgb(54, 162, 235)",
         "rgb(255, 205, 86)",
-        "rgb(255, 205, 80)"
+        "rgb(165, 42, 42)"
       ],
       hoverOffset: 4,
     },
@@ -70,8 +70,8 @@
   
   <style scoped>
   .chart-container {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
   }
   </style>
   
