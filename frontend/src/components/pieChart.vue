@@ -9,20 +9,21 @@
   import { onMounted } from 'vue';
   
   const data = {
-    labels: ["Red", "Blue", "Yellow"],
-    datasets: [
-      {
-        label: "My First Dataset",
-        data: [300, 50, 100],
-        backgroundColor: [
-          "rgb(255, 99, 132)",
-          "rgb(54, 162, 235)",
-          "rgb(255, 205, 86)",
-        ],
-        hoverOffset: 4,
-      },
-    ],
-  };
+  labels: ["Red", "Blue", "Yellow","Brown"],
+  datasets: [
+    {
+      label: "My First Dataset",
+      data: [35521, 21378, 46351,86392],
+      backgroundColor: [
+        "rgb(255, 99, 132)",
+        "rgb(54, 162, 235)",
+        "rgb(255, 205, 86)",
+        "rgb(255, 205, 80)"
+      ],
+      hoverOffset: 4,
+    },
+  ],
+};
   
   const plugins = {
     legend: {
