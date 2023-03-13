@@ -1,12 +1,13 @@
 <script>
 import { DateTime } from 'luxon'
 import axios from 'axios'
+import PieChart from './pieChart.vue'
 import AttendanceChart from './barChart.vue'
 const apiURL = import.meta.env.VITE_ROOT_API
-
 export default {
   components: {
-    AttendanceChart
+    AttendanceChart,
+    PieChart
   },
   data() {
     return {
@@ -135,5 +136,23 @@ export default {
         </div>
       </div>
     </div>
+
+
+    <br>
+    <br>
+    <h2 class="text-2xl font-bold text-center">Number of Clients by Zip Code</h2>
+    <div text-center>
+    <PieChart class="mx-auto">
+      
+    </PieChart>
+    </div>
+    
   </main>
 </template>
+
+<style>
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
