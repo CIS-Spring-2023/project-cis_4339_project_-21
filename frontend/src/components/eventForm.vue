@@ -1,5 +1,6 @@
 <script>
 import listServices from './services.vue'
+import { useLoggedInUserStore } from "@/store/loggedInUser";
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import axios from 'axios'
@@ -7,7 +8,10 @@ const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   setup() {
-    return { v$: useVuelidate({ $autoDirty: true }) }
+    const v$ = useVuelidate({ $autoDirty: true });
+    const user = useLoggedInUserStore();
+
+    return { v$, user };
   },
   data() {
     return {
@@ -218,7 +222,7 @@ export default {
               </label>
             </div>
             <!-- Add a button to edit services if user is an editor -->
-            <div>
+            <div v-if="user.name === 'Editor'">
               <v-btn class="bg-red-700 text-white rounded" @click="editServices">Edit Services</v-btn>
             </div>
           </div>
