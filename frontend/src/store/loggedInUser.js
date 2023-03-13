@@ -1,3 +1,6 @@
+// This whole page was copied and pasted from the student management app from class
+// to make use of its functionality 
+
 import { defineStore } from 'pinia'
 
 //defining a store
@@ -38,8 +41,8 @@ export const useLoggedInUserStore = defineStore({
 
 //simulate a login - we will later use our backend to handle authentication
 function apiLogin(u, p) {
-  if (u === "viewer" && p === "v") return Promise.resolve({ isAllowed: true, name: "Viewer" });
-  if (u === "editor" && p === "e") return Promise.resolve({ isAllowed: true, name: "Editor" });
+  if (u === "viewer" && p === "v") return Promise.resolve({ isAllowed: true, name: "Viewer" }); // Login for a viewer
+  if (u === "editor" && p === "e") return Promise.resolve({ isAllowed: true, name: "Editor" }); // Login for an Editor 
   if (p === "ed") return Promise.resolve({ isAllowed: false });
   return Promise.reject(new Error("invalid credentials"));
 }

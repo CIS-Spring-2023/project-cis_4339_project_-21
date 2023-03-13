@@ -3,9 +3,13 @@ export default {
   data() {
     return {
       services: [
-        { id: 1, name: 'Service 1', description: 'Description of service 1', active: true },
-        { id: 2, name: 'Service 2', description: 'Description of service 2', active: false },
-        { id: 3, name: 'Service 3', description: 'Description of service 3', active: true },
+        { id: 1, name: 'Family Support', description: 'Belongs to instance 1', active: true },
+        { id: 2, name: 'Adult Education', description: 'Belongs to instance 1', active: true },
+        { id: 3, name: 'Youth Services Program', description: 'Belongs to instance 1', active: true },
+        { id: 3, name: 'Early Childhood Education', description: 'Belongs to instance 1', active: true },
+        { id: 4, name: 'Health and Wellness Services', description: 'Belong to instance 2', active: true },
+        { id: 5, name: 'Career Services', description: 'Belong to instance 2', active: false },
+        { id: 6, name: 'Cultural and Artistic Services', description: 'Belong to instance 2', active: false },
       ],
       newService: {
         name: '',
@@ -164,6 +168,9 @@ export default {
             <br>
             <button class="bg-red-700 text-white rounded" type="submit">Create</button>
             </form>
+            <br>
+            <br>
+            <br>
         </div>
     </div>
 </template>

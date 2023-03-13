@@ -32,6 +32,7 @@
   </template>
   
   <script>
+  // Got this overall template from student management app from in class examples 
   import { useLoggedInUserStore } from "@/store/loggedInUser";
   
   export default {

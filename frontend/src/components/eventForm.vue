@@ -15,10 +15,9 @@ export default {
   },
   data() {
     return {
-      // removed unnecessary extra array to track services
       event: {
         name: '',
-        services: listServices.data().services,
+        services: listServices.data().services, // getting hard coded services from service.vue 
         date: '',
         address: {
           line1: '',
@@ -141,19 +140,8 @@ export default {
           <div></div>
           <div></div>
           <div></div>
-          <!-- form field -->
-          <!-- This section needs to be changed for services -->
-          <!-- <div>
-          <ul>
-                <li v-for="(service, index) in event.services" :key="index" class="service-item">
-                    <div class="service-name" >
-                        {{ service.name }} 
-                    </div>
-                    <br>
-                </li>
-          </ul>
-          </div> -->
           <div class="flex flex-col grid-cols-3">
+            <!-- Service that are initially active are shown in here  -->
             <label>Services Offered at Event</label>
             <!-- new section -->
             <div v-for="(service, index) in event.services" :key="index">
@@ -166,59 +154,6 @@ export default {
                   notchecked
                 />
                 <span class="ml-2">{{ service.name }} </span>
-              </label>
-            </div>
-            <!-- new section -->
-            <div>
-              <label for="familySupport" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="familySupport"
-                  value="Family Support"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Family Support</span>
-              </label>
-            </div>
-            <div>
-              <label for="adultEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="adultEducation"
-                  value="Adult Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Adult Education</span>
-              </label>
-            </div>
-            <div>
-              <label for="youthServices" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="youthServices"
-                  value="Youth Services Program"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Youth Services Program</span>
-              </label>
-            </div>
-            <div>
-              <label for="childhoodEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="childhoodEducation"
-                  value="Early Childhood Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Early Childhood Education</span>
               </label>
             </div>
             <!-- Add a button to edit services if user is an editor -->
