@@ -9,11 +9,11 @@
   import { onMounted } from 'vue';
   
   const data = {
-  labels: ["Red", "Blue", "Yellow","Brown"],
+  labels: ["77002", "77030", "77077","77056"],
   datasets: [
     {
       label: "My First Dataset",
-      data: [35521, 21378, 46351,86392],
+      data: ['32', '11', '103', '59'],
       backgroundColor: [
         "rgb(255, 99, 132)",
         "rgb(54, 162, 235)",
