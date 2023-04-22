@@ -29,11 +29,15 @@ export const useLoggedInUserStore = defineStore({
       }
     },
     logout() {
-      this.patch({
-        name: "",
-        isLoggedIn: false
-      });
-
+      try {
+        this.$patch({
+          name: "",
+          isLoggedIn: false
+        })
+        this.$router.push("/");
+      } catch(error) {
+        console.log(error)
+      }
       // we could do other stuff like redirecting the user
     }
   }

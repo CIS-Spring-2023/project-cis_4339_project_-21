@@ -26,6 +26,14 @@
                             Login
                         </button>
                     </div>
+                    <br>
+                </form>
+                <form @submit.prevent="store.logout()" novalidate="fasle">
+                  <div>
+                    <button class="font-bold bg-gray-700 text-white rounded" type="submit">
+                      Logout
+                    </button>
+                  </div>
                 </form>
             </div>
     </div>
