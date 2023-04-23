@@ -26,12 +26,21 @@
                             Login
                         </button>
                     </div>
+                    <br>
+                </form>
+                <form @submit.prevent="store.logout()" novalidate="fasle">
+                  <div>
+                    <button class="font-bold bg-gray-700 text-white rounded" type="submit">
+                      Logout
+                    </button>
+                  </div>
                 </form>
             </div>
     </div>
   </template>
   
   <script>
+  // Got this overall template from student management app from in class examples 
   import { useLoggedInUserStore } from "@/store/loggedInUser";
   
   export default {
