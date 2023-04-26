@@ -20,6 +20,19 @@ router.get('/', (req, res, next) => {
     .limit(10)
 })
 
+router.get('/getclient', async (req, res, next) => {
+  try {
+    // Find all documents in the 'event' collection
+    const allclient = await clients.find({});
+    res.json(allclient);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
 // GET single client by ID
 router.get('/id/:id', (req, res, next) => {
   // use findOne instead of find to not return array
