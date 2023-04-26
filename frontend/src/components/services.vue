@@ -1,5 +1,11 @@
   <script>
+import { useLoggedInUserStore } from "@/store/loggedInUser";
 export default {
+  setup() {
+    const user = useLoggedInUserStore();
+
+    return { user };
+  },
   data() {
     return {
       services: [
@@ -65,9 +71,11 @@ export default {
                     <div v-if="services[index].active" class="service-name" >
                         {{ service.name }} &nbsp;&nbsp;&nbsp;
                         {{ service.description }} &nbsp;&nbsp;&nbsp;
-                        <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button>
-                        &nbsp;
-                        <button class="bg-red-700 text-white rounded" @click="softDeleteService(service)">Deactivate</button>
+                        <div v-if="user.name === 'Editor'">
+                          <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button>
+                          &nbsp;
+                          <button class="bg-red-700 text-white rounded" @click="activateService(service)">Activate</button>
+                        </div>
                     </div>
                     <br>
                 </li>
@@ -78,9 +86,11 @@ export default {
                     <div v-if="!services[index].active" class="service-name" >
                         {{ service.name }} &nbsp;&nbsp;&nbsp;
                         {{ service.description }} &nbsp;&nbsp;&nbsp;
-                        <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button>
-                        &nbsp;
-                        <button class="bg-red-700 text-white rounded" @click="activateService(service)">Activate</button>
+                        <div v-if="user.name === 'Editor'">
+                          <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button>
+                          &nbsp;
+                          <button class="bg-red-700 text-white rounded" @click="activateService(service)">Activate</button>
+                        </div>
                     </div>
                     <br>
                 </li>
@@ -135,7 +145,7 @@ export default {
 
 
         <!-- Create A new Service-->
-        <div class="text-center">
+        <div v-if="user.name === 'Editor'" class="text-center">
             <form @submit.prevent="createService">
             <!-- grid container -->
             <div
