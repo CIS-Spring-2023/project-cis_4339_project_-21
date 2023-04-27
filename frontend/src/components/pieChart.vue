@@ -10,16 +10,18 @@ import { onMounted } from 'vue';
 import Axios from 'axios'; // Import Axios
 
 const data = {
-  labels: ["Total Events"],
+  labels: [],
   datasets: [
     {
       label: "My First Dataset",
-      data: ['32'],
+      data: [''],
       backgroundColor: [
         "rgb(255, 99, 132)",
         "rgb(54, 162, 235)",
         "rgb(255, 205, 86)",
-        "rgb(165, 42, 42)"
+        "rgb(165, 42, 42)",
+        "rgb(0, 0, 128)",
+        "rgb(128, 128, 0)"
       ],
       hoverOffset: 4,
     },
@@ -59,27 +61,33 @@ const config = {
   data,
   plugins
 };
-onMounted(async () => { // Use async function for fetching data
+onMounted(async () => {
   const canvas = document.getElementById("chart") as HTMLCanvasElement;
-  canvas.width = 50; // adjust canvas width and height
+  canvas.width = 50;
   canvas.height = 50;
   try {
-    const response = await Axios.get('http://localhost:3000/clients/'); // Fetch data from API
-    const totalClients = response.data.length; // Count total clients
-
-    // Fetch data from another API to get total orgs
-    const orgResponse = await Axios.get('http://localhost:3000/org/getorg'); // Fetch data from org API
-    const totalOrgs = orgResponse.data.length; // Count total orgs
-
-    // Update data and re-render chart
-    data.labels.push("Total Clients", "Total Organizations");
-    data.datasets[0].data.push(totalClients, totalOrgs);
+    const response = await Axios.get('http://localhost:3000/clients/getclient');
+    const clients = response.data;
+    const counts = Object.entries(
+      clients.reduce((acc, client) => {
+        const { zip } = client.address;
+        if (zip) {
+          if (acc[zip]) {
+            acc[zip] += 1;
+          } else {
+            acc[zip] = 1;
+          }
+        }
+        return acc;
+      }, {})
+    ).map(([zip, count]) => ({ zip, count }));
+    data.labels = counts.map(({ zip, count }, index) => ` ${zip}`);
+    data.datasets[0].data = counts.map(({ count }) => count);
     new Chart(canvas, config);
   } catch (error) {
     console.error(error);
   }
 });
-
 
 
 
