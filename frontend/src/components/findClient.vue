@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios'
+import { useLoggedInUserStore } from "@/store/loggedInUser";
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
@@ -15,6 +16,10 @@ export default {
   },
   created() {
     this.getClients()
+  },
+  setup() {
+    const user = useLoggedInUserStore();
+    return { user };
   },
   methods: {
     handleSubmitForm() {
@@ -152,7 +157,7 @@ export default {
           </thead>
           <tbody class="divide-y divide-gray-300">
             <tr
-              @click="editClient(client._id)"
+              @click="user.name === 'editor' ? editClient(client._id) : null"
               v-for="client in queryData"
               :key="client._id"
             >

@@ -3,7 +3,9 @@ import { DateTime } from 'luxon'
 import axios from 'axios'
 import PieChart from './pieChart.vue'
 import AttendanceChart from './barChart.vue'
+import { useLoggedInUserStore } from "@/store/loggedInUser";
 const apiURL = import.meta.env.VITE_ROOT_API
+
 export default {
   components: {
     AttendanceChart,
@@ -17,6 +19,10 @@ export default {
       loading: false,
       error: null
     }
+  },
+  setup() {
+    const user = useLoggedInUserStore();
+    return { user };
   },
   mounted() {
     this.getAttendanceData()
@@ -95,7 +101,7 @@ export default {
             </thead>
             <tbody class="divide-y divide-gray-300">
               <tr
-                @click="editEvent(event._id)"
+                @click="user.name === 'editor' ? editEvent(event._id) : null"
                 v-for="event in recentEvents"
                 :key="event._id"
               >

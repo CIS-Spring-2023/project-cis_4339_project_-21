@@ -1,6 +1,7 @@
 <script>
 import { DateTime } from 'luxon'
 import axios from 'axios'
+import { useLoggedInUserStore } from "@/store/loggedInUser";
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
@@ -15,6 +16,10 @@ export default {
   },
   mounted() {
     this.getEvents()
+  },
+  setup() {
+    const user = useLoggedInUserStore();
+    return { user };
   },
   methods: {
     // better formattedDate
@@ -148,7 +153,7 @@ export default {
           </thead>
           <tbody class="divide-y divide-gray-300">
             <tr
-              @click="editEvent(event._id)"
+              @click="user.name === 'editor' ? editEvent(event._id) : null"
               v-for="event in events"
               :key="event._id"
             >
