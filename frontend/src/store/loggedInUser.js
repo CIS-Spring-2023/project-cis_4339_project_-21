@@ -2,6 +2,8 @@
 // to make use of its functionality 
 
 import { defineStore } from 'pinia'
+import axios from 'axios'
+
 
 //defining a store
 export const useLoggedInUserStore = defineStore({
@@ -18,12 +20,20 @@ export const useLoggedInUserStore = defineStore({
   actions: {
     async login(username, password) {
       try {
-        const response = await apiLogin(username, password);
-        this.$patch({ // pinia path function in documentation  
-          isLoggedIn: response.isAllowed,
-          name: response.name,
-        })
-        this.$router.push("/");
+        const response = await axios.post(`${import.meta.env.VITE_ROOT_API}/users/login`, {
+          username,
+          password
+        });
+
+        if (response.data && response.data.user) {
+          this.$patch({
+            isLoggedIn: true,
+            name: response.data.user.role,
+          })
+          this.$router.push("/");
+        } else {
+          console.log("Login failed");
+        }
       } catch(error) {
         console.log(error)
       }
@@ -42,12 +52,4 @@ export const useLoggedInUserStore = defineStore({
     }
   }
 });
-
-//simulate a login - we will later use our backend to handle authentication
-function apiLogin(u, p) {
-  if (u === "viewer" && p === "v") return Promise.resolve({ isAllowed: true, name: "Viewer" }); // Login for a viewer
-  if (u === "editor" && p === "e") return Promise.resolve({ isAllowed: true, name: "Editor" }); // Login for an Editor 
-  if (p === "ed") return Promise.resolve({ isAllowed: false });
-  return Promise.reject(new Error("invalid credentials"));
-}
 
