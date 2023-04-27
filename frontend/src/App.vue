@@ -52,7 +52,7 @@ export default {
             </li>
 
             <!-- If user is logged in -->
-            <li v-if="user.isLoggedIn  && user.name === 'Editor'">
+            <li v-if="user.isLoggedIn  && user.name === 'editor'">
               <router-link to="/intakeform">
                 <span
                   style="position: relative; top: 6px"
@@ -64,7 +64,7 @@ export default {
             </li>
 
             <!-- If user is logged in -->
-            <li v-if="user.isLoggedIn && user.name === 'Editor'">
+            <li v-if="user.isLoggedIn && user.name === 'editor'">
               <router-link to="/eventform">
                 <span
                   style="position: relative; top: 6px"
@@ -76,7 +76,7 @@ export default {
             </li>
             
             <!-- If user is logged in -->
-            <li v-if="user.isLoggedIn && (user.name === 'Editor' || user.name === 'Viewer')">
+            <li v-if="user.isLoggedIn && (user.name === 'editor' || user.name === 'viewer')">
               <router-link to="/findclient">
                 <span
                   style="position: relative; top: 6px"
@@ -88,7 +88,7 @@ export default {
             </li>
 
             <!-- If user is logged in -->
-            <li v-if="user.isLoggedIn && (user.name === 'Editor' || user.name === 'Viewer')">
+            <li v-if="user.isLoggedIn && (user.name === 'editor' || user.name === 'viewer')">
               <router-link to="/findevents">
                 <span
                   style="position: relative; top: 6px"
@@ -100,7 +100,7 @@ export default {
             </li>
 
             <!-- If user is logged in as editor -->
-            <li v-if="user.isLoggedIn && (user.name === 'Editor' || user.name === 'Viewer')">
+            <li v-if="user.isLoggedIn && (user.name === 'editor' || user.name === 'viewer')">
               <router-link to="/services">
                 <span
                   style="position: relative; top: 6px"
