@@ -21,10 +21,10 @@ VITE_ROOT_API is the URL for the backend API, either on localhost or in the clou
 
 #### LOGIN INFORMATION ####
 To log in as a viewer use:
-Username: viewer
-Password: v
+Username: vuser
+Password: vpassword
 
 
 To log in as a editor use:
-Username: editor
-Password: e
+Username: euser
+Password: epassword
