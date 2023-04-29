@@ -13,6 +13,7 @@ export default {
   data() {
     return {
       clientAttendees: [],
+      services: [],
       event: {
         name: '',
         services: [],
@@ -29,17 +30,33 @@ export default {
       }
     }
   },
-  created() {
-    axios.get(`${apiURL}/events/id/${this.$route.params.id}`).then((res) => {
-      this.event = res.data
-      this.event.date = this.formattedDate(this.event.date)
-      this.event.attendees.forEach((e) => {
-        axios.get(`${apiURL}/clients/id/${e}`).then((res) => {
-          this.clientAttendees.push(res.data)
-        })
-      })
-    })
+  async created() {
+    try {
+    const serviceResponse = await axios.get(`${apiURL}/services`);
+    this.services = serviceResponse.data;
+
+    const response = await axios.get(`${apiURL}/events/id/${this.$route.params.id}`);
+    this.event = response.data;
+    this.event.date = this.formattedDate(this.event.date);
+
+    for(let attendee of this.event.attendees) {
+      try {
+        const res = await axios.get(`${apiURL}/clients/id/${attendee}`);
+        this.clientAttendees.push(res.data);
+      } catch (error) {
+        console.error(`Error retrieving data for client with ID ${attendee}: `, error);
+      }
+    }
+
+    } catch (error) {
+      console.error(error);
+    }
   },
+  computed: {
+    activeServices() {
+      return this.services.filter(service => service.active);
+    }
+  }, 
   methods: {
     // better formatted date, converts UTC to local time
     formattedDate(datetimeDB) {
@@ -156,60 +173,48 @@ export default {
           <div></div>
           <!-- form field -->
           <div class="flex flex-col grid-cols-3">
-            <label>Services Offered at Event</label>
-            <div>
-              <label for="familySupport" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="familySupport"
-                  value="Family Support"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Family Support</span>
+            <!-- Services from event (already selected)  -->
+            <label>Event services to update: </label>
+            <label>(Uncheck to remove) </label>
+            <!-- new section -->
+            <div v-for="(service, index) in this.event.services" :key="index">
+              <label :for="service" class="inline-flex items-center">
+              <input
+                type="checkbox"
+                :id="service"
+                :value="service"
+                v-model="event.services" 
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+                <span class="ml-2">{{ service }} </span>
               </label>
             </div>
-            <div>
-              <label for="adultEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="adultEducation"
-                  value="Adult Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Adult Education</span>
-              </label>
-            </div>
-            <div>
-              <label for="youthServices" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="youthServices"
-                  value="Youth Services Program"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Youth Services Program</span>
-              </label>
-            </div>
-            <div>
-              <label for="childhoodEducation" class="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="childhoodEducation"
-                  value="Early Childhood Education"
-                  v-model="event.services"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
-                />
-                <span class="ml-2">Early Childhood Education</span>
-              </label>
-            </div>
+            
           </div>
+
+
+
+          <!-- form field -->
+          <div class="flex flex-col grid-cols-3">
+            <!-- Services that are active are shown in here  -->
+            <label>Active Services to add to event: </label>
+            <!-- new section -->
+            <div v-for="(service, index) in activeServices" :key="index">
+              <label v-if="service.active" :for="service.name" class="inline-flex items-center">
+                <input
+                type="checkbox"
+                :id="service.name"
+                :value="service.name"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="event.services"  
+                />
+                <span class="ml-2">{{ service.name }} </span>
+              </label>
+            </div>
+            
+          </div>
+
+          
         </div>
 
         <!-- grid container -->

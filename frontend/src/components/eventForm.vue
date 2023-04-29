@@ -1,5 +1,4 @@
 <script>
-import listServices from './services.vue'
 import { useLoggedInUserStore } from "@/store/loggedInUser";
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
@@ -17,7 +16,7 @@ export default {
     return {
       event: {
         name: '',
-        services: listServices.data().services, // getting hard coded services from service.vue 
+        services: [],
         date: '',
         address: {
           line1: '',
@@ -25,11 +24,25 @@ export default {
           city: '',
           county: '',
           zip: ''
-        },
+          },
         description: ''
-      }
+      },
+      services: [],
     }
   },
+  async created() {
+    try {
+      const response = await axios.get(`${apiURL}/services`);
+      this.services = response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  computed: {
+    activeServices() {
+      return this.services.filter(service => service.active);
+    }
+  }, 
   methods: {
     async handleSubmitForm() {
       // Checks to see if there are any errors in validation
@@ -144,20 +157,20 @@ export default {
             <!-- Service that are initially active are shown in here  -->
             <label>Services Offered at Event</label>
             <!-- new section -->
-            <div v-for="(service, index) in event.services" :key="index">
-              <label v-if="event.services[index].active" for="{{ service.name }}" class="inline-flex items-center">
+            <div v-for="(service, index) in activeServices" :key="index">
+              <label v-if="service.active" :for="service.name" class="inline-flex items-center">
                 <input
-                  type="checkbox"
-                  id="{{ service.name }}"
-                  value="{{ service.name }}"
-                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
-                  notchecked
+                type="checkbox"
+                :id="service.name"
+                :value="service.name"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="event.services"  
                 />
                 <span class="ml-2">{{ service.name }} </span>
               </label>
             </div>
             <!-- Add a button to edit services if user is an editor -->
-            <div v-if="user.name === 'Editor'">
+            <div v-if="user.name === 'editor'">
               <v-btn class="bg-red-700 text-white rounded" @click="editServices">Edit Services</v-btn>
             </div>
           </div>

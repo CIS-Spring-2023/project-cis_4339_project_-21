@@ -1,5 +1,8 @@
-  <script>
+<script>
 import { useLoggedInUserStore } from "@/store/loggedInUser";
+import axios from 'axios'; // Make sure to install axios using npm install axios
+const apiURL = import.meta.env.VITE_ROOT_API
+
 export default {
   setup() {
     const user = useLoggedInUserStore();
@@ -8,15 +11,7 @@ export default {
   },
   data() {
     return {
-      services: [
-        { id: 1, name: 'Family Support', description: 'Belongs to instance 1', active: true },
-        { id: 2, name: 'Adult Education', description: 'Belongs to instance 1', active: true },
-        { id: 3, name: 'Youth Services Program', description: 'Belongs to instance 1', active: true },
-        { id: 3, name: 'Early Childhood Education', description: 'Belongs to instance 1', active: true },
-        { id: 4, name: 'Health and Wellness Services', description: 'Belong to instance 2', active: true },
-        { id: 5, name: 'Career Services', description: 'Belong to instance 2', active: false },
-        { id: 6, name: 'Cultural and Artistic Services', description: 'Belong to instance 2', active: false },
-      ],
+      services: [],
       newService: {
         name: '',
         description: '',
@@ -25,162 +20,204 @@ export default {
       selectedService: null,
     };
   },
+  computed: {
+    activeServices() {
+      return this.services.filter(service => service.active);
+    },
+    inactiveServices() {
+      return this.services.filter(service => !service.active);
+    }
+  },
+  async created() {
+    try {
+      const response = await axios.get(`${apiURL}/services`);
+      this.services = response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  },
   methods: {
-    createService() {
-      const newId = this.services[this.services.length - 1].id + 1;
-      this.newService.id = newId;
-      this.services.push(this.newService);
-      this.newService = {
-        name: '',
-        description: '',
-        active: true,
-      };
+    async createService() {
+      try {
+        const response = await axios.post(`${apiURL}/services`, this.newService);
+        this.services.push(response.data);
+        this.newService = {
+          name: '',
+          description: '',
+          active: true,
+        };
+      } catch (error) {
+        console.error(error);
+      }
     },
     editService(service) {
       this.selectedService = Object.assign({}, service);
     },
-    updateService(service) {
-      const index = this.services.findIndex((s) => s.id === service.id);
-      this.services[index] = service;
-      this.selectedService = null;
+    async updateService(service) {
+      try {
+        const response = await axios.put(`${apiURL}/services/updatename/${service._id}`, {
+          name: service.name,
+        });
+        const response2 = await axios.put(`${apiURL}/services/updatedescription/${service._id}`, {
+          description: service.description,
+        });
+        const index = this.services.findIndex((s) => s._id === service._id);
+        this.services[index] = response2.data;
+        this.selectedService = null;
+      } catch (error) {
+        console.error(error);
+      }
     },
-    softDeleteService(service) {
-      const index = this.services.findIndex((s) => s.id === service.id);
-      this.services[index].active = false;
+    async softDeleteService(service) {
+      try {
+        const response = await axios.put(`${apiURL}/services/deactivate/${service._id}`);
+        const index = this.services.findIndex((s) => s._id === service._id);
+        this.services[index] = response.data;
+      } catch (error) {
+        console.error(error);
+      }
     },
-    activateService(service) {
-      const index = this.services.findIndex((s) => s.id === service.id);
-      this.services[index].active = true;
+    async activateService(service) {
+      try {
+        const response = await axios.put(`${apiURL}/services/activate/${service._id}`);
+        const index = this.services.findIndex((s) => s._id === service._id);
+        this.services[index] = response.data;
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 };
 </script>
 
-
 <template>
+  <div>
     <div>
-        <div>
-            <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Services</h1>
-            <br>
-        </div>
-        <!-- List of Services -->
-        <h2 class="text-2xl font-bold text-center">Current Services</h2>
-        <div v-if="services.length > 0" class="text-center">
-            <ul>
-                <li v-for="(service, index) in services" :key="index" class="service-item">
-                    <div v-if="services[index].active" class="service-name" >
-                        {{ service.name }} &nbsp;&nbsp;&nbsp;
-                        {{ service.description }} &nbsp;&nbsp;&nbsp;
-                        <div v-if="user.name === 'Editor'">
-                          <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button>
-                          &nbsp;
-                          <button class="bg-red-700 text-white rounded" @click="activateService(service)">Activate</button>
-                        </div>
-                    </div>
-                    <br>
-                </li>
-            </ul>
-            <ul>
-                <h2 class="text-2xl font-bold text-center">Unactive Services</h2>
-                <li v-for="(service, index) in services" :key="index" class="service-item">
-                    <div v-if="!services[index].active" class="service-name" >
-                        {{ service.name }} &nbsp;&nbsp;&nbsp;
-                        {{ service.description }} &nbsp;&nbsp;&nbsp;
-                        <div v-if="user.name === 'Editor'">
-                          <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button>
-                          &nbsp;
-                          <button class="bg-red-700 text-white rounded" @click="activateService(service)">Activate</button>
-                        </div>
-                    </div>
-                    <br>
-                </li>
-
-            </ul>
-        </div>
-
-        <div v-else>
-            <h2 class="text-2xl font-bold text-center">No services found</h2>
-        </div>
-        <br>
-        <br>
-        <br>
-
-
-        <!-- Update Service -->
-        <div v-if="selectedService" class = "text-center">
-            <form @submit.prevent="updateService(selectedService)">
-        <!-- grid container -->
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
-            >
-              <h2 class="text-2xl font-bold">Edit Service</h2>
-
-              <!-- form field -->
-              <div class="flex flex-col">
-                <label class="block">
-                  <span class="text-gray-700">Edit Service Name</span>
-                  <input
-                    type="text"
-                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    v-model="selectedService.name"
-                  />
-                </label>
-              </div>
-              <div class="flex flex-col">
-                <label class="block">
-                  <span class="text-gray-700">Edit Service Description</span>
-                  <input
-                    type="text"
-                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    v-model="selectedService.description"
-                  />
-                </label>
-              </div>
-            </div> 
-            <br>
-            <button class="bg-red-700 text-white rounded" type="submit">Update</button>
-            </form>
-        </div>
-        <br>
-
-
-        <!-- Create A new Service-->
-        <div v-if="user.name === 'Editor'" class="text-center">
-            <form @submit.prevent="createService">
-            <!-- grid container -->
-            <div
-              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
-            >
-              <h2 class="text-2xl font-bold">Create New Service</h2>
-
-              <!-- form field -->
-              <div class="flex flex-col">
-                <label class="block">
-                  <span class="text-gray-700">Service Name</span>
-                  <input
-                    type="text"
-                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    v-model="newService.name"
-                  />
-                </label>
-              </div>
-              <div class="flex flex-col">
-                <label class="block">
-                  <span class="text-gray-700">Service Description</span>
-                  <input
-                    type="text"
-                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    v-model="newService.description"
-                  />
-                </label>
-              </div>
-            </div> 
-            <br>
-            <button class="bg-red-700 text-white rounded" type="submit">Create</button>
-            </form>
-            <br>
-            <br>
-            <br>
-        </div>
+      <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Services</h1>
     </div>
+    <!-- List of Services -->
+    <div v-if="services.length > 0" class="text-center">
+      <h2 class="text-2xl font-bold text-center">Active Services</h2>
+      <table class="table-auto w-full mb-6">
+          <thead>
+            <tr>
+              <th class="px-4 py-2">Service Name</th>
+              <th class="px-4 py-2">Description</th>
+              <th class="px-4 py-2" v-if="user.name === 'editor'">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(service, index) in activeServices" :key="index">
+              <td class="border px-4 py-2">{{ service.name }}</td>
+              <td class="border px-4 py-2">{{ service.description }}</td>
+              <td class="border px-4 py-2" v-if="user.name === 'editor'">
+                <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button> &nbsp;
+                <button class="bg-red-700 text-white rounded" @click="softDeleteService(service)">Soft Delete</button>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+      <h2 class="text-2xl font-bold text-center">Inactive Services</h2>
+      <table class="table-auto w-full">
+          <thead>
+            <tr>
+              <th class="px-4 py-2">Service Name</th>
+              <th class="px-4 py-2">Description</th>
+              <th class="px-4 py-2" v-if="user.name === 'editor'">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(service, index) in inactiveServices" :key="index">
+              <td class="border px-4 py-2">{{ service.name }}</td>
+              <td class="border px-4 py-2">{{ service.description }}</td>
+              <td class="border px-4 py-2" v-if="user.name === 'editor'">
+                <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button> &nbsp;
+                <button class="bg-red-700 text-white rounded" @click="activateService(service)">Activate</button>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+    <div v-else>
+      <h2 class="text-2xl font-bold text-center">No services found</h2>
+    </div>
+
+
+      <!-- Update Service -->
+      <div v-if="selectedService" class = "text-center">
+          <form @submit.prevent="updateService(selectedService)">
+      <!-- grid container -->
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+          >
+            <h2 class="text-2xl font-bold">Edit Service</h2>
+
+            <!-- form field -->
+            <div class="flex flex-col">
+              <label class="block">
+                <span class="text-gray-700">Edit Service Name</span>
+                <input
+                  type="text"
+                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  v-model="selectedService.name"
+                />
+              </label>
+            </div>
+            <div class="flex flex-col">
+              <label class="block">
+                <span class="text-gray-700">Edit Service Description</span>
+                <input
+                  type="text"
+                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  v-model="selectedService.description"
+                />
+              </label>
+            </div>
+          </div> 
+          <br>
+          <button class="bg-red-700 text-white rounded" type="submit">Update</button>
+          </form>
+      </div>
+      <br>
+
+
+      <!-- Create A new Service-->
+      <div v-if="user.name === 'editor'" class="text-center">
+          <form @submit.prevent="createService">
+          <!-- grid container -->
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
+          >
+            <h2 class="text-2xl font-bold">Create New Service</h2>
+
+            <!-- form field -->
+            <div class="flex flex-col">
+              <label class="block">
+                <span class="text-gray-700">Service Name</span>
+                <input
+                  type="text"
+                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  v-model="newService.name"
+                />
+              </label>
+            </div>
+            <div class="flex flex-col">
+              <label class="block">
+                <span class="text-gray-700">Service Description</span>
+                <input
+                  type="text"
+                  class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  v-model="newService.description"
+                />
+              </label>
+            </div>
+          </div> 
+          <br>
+          <button class="bg-red-700 text-white rounded" type="submit">Create</button>
+          </form>
+          <br>
+          <br>
+          <br>
+      </div>
+  </div>
 </template>
