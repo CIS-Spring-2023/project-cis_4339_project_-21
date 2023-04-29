@@ -64,17 +64,17 @@ export default {
             <br>
         </div>
         <!-- List of Services -->
-        <h2 class="text-2xl font-bold text-center">Current Services</h2>
+        <h2 class="text-2xl font-bold text-center">Active Services</h2>
         <div v-if="services.length > 0" class="text-center">
             <ul>
                 <li v-for="(service, index) in services" :key="index" class="service-item">
                     <div v-if="services[index].active" class="service-name" >
                         {{ service.name }} &nbsp;&nbsp;&nbsp;
                         {{ service.description }} &nbsp;&nbsp;&nbsp;
-                        <div v-if="user.name === 'Editor'">
+                        <div v-if="user.name === 'editor'">
                           <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button>
                           &nbsp;
-                          <button class="bg-red-700 text-white rounded" @click="activateService(service)">Activate</button>
+                          <button class="bg-red-700 text-white rounded" @click="activateService(service)">Soft Delete</button>
                         </div>
                     </div>
                     <br>
@@ -86,7 +86,7 @@ export default {
                     <div v-if="!services[index].active" class="service-name" >
                         {{ service.name }} &nbsp;&nbsp;&nbsp;
                         {{ service.description }} &nbsp;&nbsp;&nbsp;
-                        <div v-if="user.name === 'Editor'">
+                        <div v-if="user.name === 'editor'">
                           <button class="bg-red-700 text-white rounded" @click="editService(service)">Edit</button>
                           &nbsp;
                           <button class="bg-red-700 text-white rounded" @click="activateService(service)">Activate</button>
@@ -145,7 +145,7 @@ export default {
 
 
         <!-- Create A new Service-->
-        <div v-if="user.name === 'Editor'" class="text-center">
+        <div v-if="user.name === 'editor'" class="text-center">
             <form @submit.prevent="createService">
             <!-- grid container -->
             <div
