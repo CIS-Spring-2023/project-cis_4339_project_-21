@@ -1,4 +1,4 @@
-// This whole page was copied and pasted from the student management app from class
+// Got it from student management app from class
 // to make use of its functionality 
 
 import { defineStore } from 'pinia'

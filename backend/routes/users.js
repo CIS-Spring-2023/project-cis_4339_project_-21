@@ -42,7 +42,6 @@ router.post('/login', async (req, res, next) => {
         user: {
             username: user.username,
             role: user.role 
-            // Assuming the user's role is stored in a `role` field on the user document.
         }
     });
   } catch (error) {

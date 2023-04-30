@@ -1,6 +1,6 @@
 <script>
 import { useLoggedInUserStore } from "@/store/loggedInUser";
-import axios from 'axios'; // Make sure to install axios using npm install axios
+import axios from 'axios'; 
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {

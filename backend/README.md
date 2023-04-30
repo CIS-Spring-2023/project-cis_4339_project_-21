@@ -2,6 +2,13 @@
 
 This implementation is for NodeJS based on [Express](https://expressjs.com/) and [MongoDB](https://www.mongodb.com/) and uses [mongoose](https://mongoosejs.com/) as the ODM.
 
+## IMPORTANT
+### The .env should contain as follows: 
+    
+    MONGO_URL= mongodb+srv://group21:cis4339@group21.ch1nszx.mongodb.net/test
+    PORT= 3000
+    ORG= communitygarden
+
 ## Project setup
 
     npm install
@@ -23,5 +30,5 @@ Setup a .env file with the following variables: MONGO_URL, PORT and ORG
     npm start
 
 ## Postman Documentation
-
-Can be found at <https://documenter.getpostman.com/view/23133138/2s83mdJiqh>
+    
+    Can be found at <https://documenter.getpostman.com/view/23133138/2s83mdJiqh>
