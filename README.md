@@ -20,7 +20,7 @@ Follow instructions in backend README for setup and running as a local instance.
 ```
 https://documenter.getpostman.com/view/23155571/2s93eSaFSz
 ```
-We extended the API documentation for users and services. link can also be found iun backend README. 
+We extended the API documentation for users and services. Link can also be found in the backend README. 
 
 
 
